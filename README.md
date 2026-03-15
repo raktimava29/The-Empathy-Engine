@@ -174,7 +174,7 @@ Converts input text into emotion-aware speech audio.
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/empathy-engine.git
+git clone https://github.com/raktimava29/The-Empathy-Engine
 cd The-Empathy-Engine-main
 ```
 
