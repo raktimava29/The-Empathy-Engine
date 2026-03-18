@@ -1,5 +1,6 @@
 from transformers import pipeline
 from app.config import settings
+import torch
 
 class EmotionService:
 
@@ -12,11 +13,14 @@ class EmotionService:
             cls._classifier = pipeline(
                 "text-classification",
                 model=settings.MODEL_NAME,
-                return_all_scores=False
+                device=-1 
             )
         return cls._classifier
 
     def detect_emotion(self, text: str) -> str:
-        classifier = self.get_model()
-        result = classifier(text)[0]
+        model = self.get_model()
+
+        with torch.no_grad(): 
+            result = model(text)[0]
+
         return result["label"]

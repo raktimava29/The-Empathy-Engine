@@ -3,8 +3,6 @@ uvicorn
 jinja2
 transformers
 torch
-gtts
 python-dotenv
 pydantic
-pyttsx3
 edge-tts
