@@ -3,14 +3,20 @@ from app.config import settings
 
 class EmotionService:
 
-    def __init__(self):
-        self.classifier = pipeline(
-            "text-classification",
-            model=settings.MODEL_NAME,
-            return_all_scores=False
-        )
+    _classifier = None  # shared across instances
+
+    @classmethod
+    def get_model(cls):
+        if cls._classifier is None:
+            print("🔥 Loading emotion model...")
+            cls._classifier = pipeline(
+                "text-classification",
+                model=settings.MODEL_NAME,
+                return_all_scores=False
+            )
+        return cls._classifier
 
     def detect_emotion(self, text: str) -> str:
-        result = self.classifier(text)[0]
-        emotion = result["label"]
-        return emotion
+        classifier = self.get_model()
+        result = classifier(text)[0]
+        return result["label"]
