@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Request
 import os
+from fastapi import APIRouter, Request
 
 from app.models.schema import TextRequest
 from app.services.emotions import EmotionService

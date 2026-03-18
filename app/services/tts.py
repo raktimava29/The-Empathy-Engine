@@ -1,8 +1,6 @@
 import edge_tts
 import uuid
 import os
-import asyncio
-
 OUTPUT_DIR = "generated_audio"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -19,7 +17,7 @@ class TTSService:
         elif rate < 130:
             rate_mod = "-20%"
         else:
-            rate_mod = "0%"
+            rate_mod = "+0%"
 
         file_id = str(uuid.uuid4())
         filepath = os.path.join(OUTPUT_DIR, f"{file_id}.mp3")

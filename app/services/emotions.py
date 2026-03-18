@@ -1,26 +1,22 @@
-from transformers import pipeline
+import os
+from huggingface_hub import InferenceClient
 from app.config import settings
-import torch
-
 class EmotionService:
 
-    _classifier = None
-
-    @classmethod
-    def get_model(cls):
-        if cls._classifier is None:
-            print("🔥 Loading emotion model...")
-            cls._classifier = pipeline(
-                "text-classification",
-                model=settings.MODEL_NAME,
-                device=-1 
-            )
-        return cls._classifier
+    def __init__(self):
+        self.client = InferenceClient(
+            provider="hf-inference",
+            api_key=os.getenv("HF_TOKEN"),
+        )
+        self.model = settings.MODEL_NAME
 
     def detect_emotion(self, text: str) -> str:
-        model = self.get_model()
 
-        with torch.no_grad(): 
-            result = model(text)[0]
+        result = self.client.text_classification(
+            text,
+            model=self.model
+        )
 
-        return result["label"]
+        emotion = max(result, key=lambda x: x["score"])["label"]
+
+        return emotion

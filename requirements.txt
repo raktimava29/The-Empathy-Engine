@@ -1,8 +1,7 @@
 fastapi
 uvicorn
 jinja2
-transformers
-torch
 python-dotenv
 pydantic
 edge-tts
+huggingface_hub
