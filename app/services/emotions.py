@@ -3,7 +3,7 @@ from app.config import settings
 
 class EmotionService:
 
-    _classifier = None  # shared across instances
+    _classifier = None
 
     @classmethod
     def get_model(cls):
