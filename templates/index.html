@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empathy Engine</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #333;
+    }
+
+    .container {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 15px;
+        width: 400px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 10px;
+        color: #444;
+    }
+
+    p.subtitle {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        outline: none;
+        font-size: 14px;
+        margin-bottom: 15px;
+        transition: border 0.3s;
+    }
+
+    input:focus {
+        border: 1px solid #667eea;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #5a67d8;
+    }
+
+    .emotion-box {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #f3f4f6;
+        font-weight: bold;
+        color: #444;
+    }
+
+    audio {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .loader {
+        display: none;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #667eea;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Empathy Engine 🎧</h2>
+    <p class="subtitle">Turn text into emotionally expressive speech</p>
+
+    <input id="textInput" type="text" placeholder="Type something..."/>
+    
+    <button onclick="generateSpeech()">Generate Speech</button>
+
+    <div class="loader" id="loader">Generating audio...</div>
+
+    <div id="emotion" class="emotion-box" style="display:none;"></div>
+
+    <audio id="audioPlayer" controls></audio>
+
+</div>
+
+<script>
+async function generateSpeech() {
+
+    const text = document.getElementById("textInput").value;
+    const loader = document.getElementById("loader");
+    const emotionBox = document.getElementById("emotion");
+
+    if (!text.trim()) {
+        alert("Please enter some text");
+        return;
+    }
+
+    loader.style.display = "block";
+    emotionBox.style.display = "none";
+
+    try {
+        const response = await fetch("/speak", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text })
+        });
+
+        const data = await response.json();
+
+        loader.style.display = "none";
+
+        emotionBox.innerText = "Detected Emotion: " + data.emotion;
+        emotionBox.style.display = "block";
+
+        const audioPlayer = document.getElementById("audioPlayer");
+        audioPlayer.src = data.audio_url;
+        audioPlayer.play();
+
+    } catch (error) {
+        loader.style.display = "none";
+        alert("Something went wrong!");
+    }
+}
+</script>
+
+</body>
+</html>
